@@ -3,3 +3,8 @@ rm -rf results
 rm -rf work
 rm -rf .nextflow*
 rm -rf .nextflow
+rm -rf ._nextflow*
+rm -rf .devcontainer
+rm -rf .editorconfig
+rm -rf .prettier*
+rm -rf .vscode

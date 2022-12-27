@@ -1,6 +1,6 @@
 process PYCOQC {
     tag "$summary"
-    label 'process_medium'
+    label 'process_low'
 
     conda "bioconda::pycoqc=2.5.2"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

@@ -1,9 +1,9 @@
-process GUPPY_BASECALLER {
-    label 'process_high'
+process GUPPY_BASECALLER_GPU {
+    label 'process_gpu_long'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'dhspence/docker-guppy' :
-        'dhspence/docker-guppy' }"
+        'dhspence/docker-gguppy' :
+        'dhspence/docker-gguppy' }"
 
     input:
 
@@ -13,11 +13,11 @@ process GUPPY_BASECALLER {
         tuple val(meta), path ("basecall_${meta.id}_summary/sequencing_summary.txt")  , emit: summary
         tuple val(meta), path ("basecall_${meta.id}_bams")       , emit: basecall_bams_path
         tuple val(meta), path ("*.fastq.gz")    , emit: fastq
-        path "versions.yml"                           , emit: versions
+        path "versions.yml"                     , emit: versions
 
     script:
         """
-        guppy_basecaller -i $fast5_path --bam_out -s unaligned_bam -c /opt/ont/guppy/data/${params.basecall_config} --num_callers ${task.cpus}
+        guppy_basecaller -i $fast5_path --bam_out -s unaligned_bam -c /opt/ont/guppy/data/${params.basecall_config} --num_callers ${task.cpus} -x cuda:all:100%
 
         cat unaligned_bam/pass/*.fastq > ${meta.id}.fastq
         gzip ${meta.id}.fastq

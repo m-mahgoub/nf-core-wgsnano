@@ -29,9 +29,9 @@ process SAMTOOLS_MERGE {
 
     stub:
     """
-    ln -s /Users/mohamedmahgoub/Documents/Lab/dev/wgsnano/test/nf-core-wgsnano/test_data/stubs/aml476081.bam ${meta.sample}.bam
-    ln -s /Users/mohamedmahgoub/Documents/Lab/dev/wgsnano/test/nf-core-wgsnano/test_data/stubs/aml476081.bam.bai ${meta.sample}.bam.bai
-    cp /Users/mohamedmahgoub/Documents/Lab/dev/wgsnano/test/nf-core-wgsnano/test_data/stubs/samtools_versions/versions.yml .
+    ln -s ${workflow.launchDir}/stub-test/stubs/aml476081.bam ${meta.sample}.bam
+    ln -s ${workflow.launchDir}/stub-test/stubs/aml476081.bam.bai ${meta.sample}.bam.bai
+    cp ${workflow.launchDir}/stub-test/stubs/samtools_versions/versions.yml .
 
     """
 

@@ -1,6 +1,6 @@
 process SAMTOOLS_INDEX {
     tag "$meta.id"
-    label 'process_high'
+    label 'process_medium'
 
     conda "bioconda::samtools=1.16.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

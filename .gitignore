@@ -6,3 +6,6 @@ results/
 testing/
 testing*
 *.pyc
+stub-data
+conf/dhslab_test.config
+._nextflow*

@@ -37,7 +37,7 @@ process PEPPER {
 
     stub: // make links for older runs to run stubs for dry runs
     """
-    cp -r /Users/mohamedmahgoub/Documents/Lab/dev/wgsnano/test/nf-core-wgsnano/test_data/stubs/pepper_out pepper_out
+    cp -r ${workflow.launchDir}/stub-test/stubs/pepper_out pepper_out
     mv pepper_out/* .
     mv aml476081.haplotagged.bam ${meta.sample}.haplotagged.bam
     mv aml476081.phased.vcf.gz ${meta.sample}.phased.vcf.gz

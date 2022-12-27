@@ -49,6 +49,7 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 // MODULE: Installed directly from nf-core/modules
 //
 include { GUPPY_BASECALLER            } from '../modules/local/GUPPY_BASECALLER'
+include { GUPPY_BASECALLER_GPU        } from '../modules/local/GUPPY_BASECALLER_GPU'
 include { PYCOQC                      } from '../modules/local/PYCOQC'
 include { GUPPY_ALIGNER               } from '../modules/local/GUPPY_ALIGNER'
 include { SAMTOOLS_MERGE              } from '../modules/local/SAMTOOLS_MERGE'
@@ -89,16 +90,21 @@ workflow WGSNANO {
     //
     // MODULE: Guppy Basecaller
     //
-    GUPPY_BASECALLER (
-        INPUT_CHECK.out.reads
-    )
-    ch_versions = ch_versions.mix(GUPPY_BASECALLER.out.versions)
 
-
-    //
-    // CHANNEL: Channel construction to stream Guppy Basecaller output
-    //
-    ch_basecall_out = GUPPY_BASECALLER.out
+    // Run with GPU if use_gpu = true, and set a channel to stream Guppy Basecaller output
+    if ( params.use_gpu ) {
+        GUPPY_BASECALLER_GPU (
+            INPUT_CHECK.out.reads
+        )
+        ch_versions = ch_versions.mix(GUPPY_BASECALLER_GPU.out.versions)
+        ch_basecall_out = GUPPY_BASECALLER_GPU.out
+    } else {
+        GUPPY_BASECALLER (
+            INPUT_CHECK.out.reads
+        )
+        ch_versions = ch_versions.mix(GUPPY_BASECALLER.out.versions)
+        ch_basecall_out = GUPPY_BASECALLER.out
+    }
 
     //
     // MODULE: PycoQC (QC from Basecall results)
@@ -219,7 +225,7 @@ workflow WGSNANO {
     multiqc_report = MULTIQC.out.report.toList()
     // emit: Channel.empty()
     // emit: GUPPY_BASECALLER.out.basecall_bams_path.map { mata, bams -> [mata.sample , bams]} .groupTuple()
-    emit : ch_bams_path_per_sample
+    // emit : ch_bams_path_per_sample
 }
 
 /*

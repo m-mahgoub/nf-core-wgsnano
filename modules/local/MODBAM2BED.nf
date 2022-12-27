@@ -3,8 +3,8 @@ process MODBAM2BED {
 
     conda "epi2melabs::modbam2bed"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'ghcr.io/dhslab/docker-longread:latest' :
-        'ghcr.io/dhslab/docker-longread:latest' }"
+        'ghcr.io/dhslab/docker-modbam2bed:latest' :
+        'ghcr.io/dhslab/docker-modbam2bed:latest' }"
 
     input:
         tuple val(meta), path (haplotagged_bam)
@@ -17,7 +17,7 @@ process MODBAM2BED {
 
     script:
     """
-    /opt/conda/envs/modbam2bed/bin/modbam2bed \\
+    modbam2bed \\
     -e \\
     --cpg \\
     --aggregate \\
@@ -28,7 +28,7 @@ process MODBAM2BED {
     $haplotagged_bam \\
     > ${meta.sample}.cpg.stranded.bed
 
-    /opt/conda/envs/modbam2bed/bin/modbam2bed \\
+    modbam2bed \\
     -e \\
     --cpg \\
     --aggregate \\
@@ -40,7 +40,7 @@ process MODBAM2BED {
     $haplotagged_bam \\
     > ${meta.sample}.hap1.cpg.stranded.bed
 
-    /opt/conda/envs/modbam2bed/bin/modbam2bed \\
+    modbam2bed \\
     -e \\
     --cpg \\
     --aggregate \\
@@ -54,19 +54,19 @@ process MODBAM2BED {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        modbam2bed: \$(/opt/conda/envs/modbam2bed/bin/modbam2bed --version)
+        modbam2bed: \$(modbam2bed --version)
     END_VERSIONS
     """
 
-    stub:
-    """
-    cp /Users/mohamedmahgoub/Documents/Lab/dev/wgsnano/test/nf-core-wgsnano/test_data/stubs/modbam2bed/${meta.sample}*.bed .
+    // stub:
+    // """
+    // cp ${workflow.launchDir}/stub-test/stubs/modbam2bed/${meta.sample}*.bed .
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        modbam2bed: \$(/opt/conda/envs/modbam2bed/bin/modbam2bed --version)
-    END_VERSIONS
-    """
+    // cat <<-END_VERSIONS > versions.yml
+    // "${task.process}":
+    //     modbam2bed: \$(modbam2bed --version)
+    // END_VERSIONS
+    // """
 
 
 }
